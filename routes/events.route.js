@@ -1,9 +1,9 @@
 const { Router } = require( 'express' );
 const { check } = require( 'express-validator' );
 // Middlewares
-const validateFields = require('../middlewares/validate-fields.middleware');
+const { validateFields, validateJWT } = require('../middlewares');
 // Helpers
-const {isDate} = require('../helpers/date-validator.helper');
+const { isDate } = require('../helpers');
 // Controllers
 const {
 	getEvents,
@@ -23,6 +23,7 @@ router.get( '/', getEvents );
 router.get( '/:id', getEvent );
 
 router.post( '/', [
+	validateJWT,
 	check( 'title', 'The title is mandatory' ).not().isEmpty(),
 	check( 'start', 'Start date is mandatory' ).custom( isDate ),
 	check( 'end', 'End date is mandatory' ).custom( isDate ),

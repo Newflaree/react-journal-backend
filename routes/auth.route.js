@@ -1,9 +1,9 @@
 const { Router } = require( 'express' );
 const { check } = require( 'express-validator' );
 // Middlewares
-const validateFields = require('../middlewares/validate-fields.middleware');
+const { validateFields } = require('../middlewares');
 // Helpers
-const {emailValidation} = require('../helpers/db-validators.helper');
+const { emailValidation } = require('../helpers');
 // Controllers
 const { login, register } = require('../controllers/auth.controller');
 
