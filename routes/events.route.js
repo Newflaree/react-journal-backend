@@ -1,5 +1,10 @@
 const { Router } = require( 'express' );
 const { check } = require( 'express-validator' );
+// Middlewares
+const validateFields = require('../middlewares/validate-fields.middleware');
+// Helpers
+const {isDate} = require('../helpers/date-validator.helper');
+// Controllers
 const {
 	getEvents,
 	getEvent,
@@ -7,16 +12,23 @@ const {
 	updateEvent,
 	deleteEvent
 } = require('../controllers/events.controller');
-// Middlewares
-const validateFields = require('../middlewares/validate-fields.middleware');
-// Helpers
-// Controllers
 
+
+/*
+ *	PATH: /api/events
+ */
 const router = Router();
 
 router.get( '/', getEvents );
 router.get( '/:id', getEvent );
-router.post( '/', createEvent );
+
+router.post( '/', [
+	check( 'title', 'The title is mandatory' ).not().isEmpty(),
+	check( 'start', 'Start date is mandatory' ).custom( isDate ),
+	check( 'end', 'End date is mandatory' ).custom( isDate ),
+	validateFields
+], createEvent );
+
 router.put( '/:id', updateEvent );
 router.delete( '/:id', deleteEvent );
 
