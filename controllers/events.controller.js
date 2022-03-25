@@ -3,8 +3,11 @@ const { request, response } = require( 'express' );
 const Event = require( '../models/event.model' );
 
 const getEvents = async( req = request, res = response ) => {
-	const events = await Event.find().populate( 'user' );
-	const total = await Event.countDocuments();
+	const [ total, events ] = await Promise.all([
+		Event.countDocuments(),
+		Event.find().populate( 'user', 'name' )
+	]);
+
 	res.json({
 		ok: true,
 		total,
