@@ -2,10 +2,13 @@ const { request, response } = require( 'express' );
 // Models
 const Event = require( '../models/event.model' );
 
-const getEvents = ( req = request, res = response ) => {
+const getEvents = async( req = request, res = response ) => {
+	const events = await Event.find().populate( 'user' );
+	const total = await Event.countDocuments();
 	res.json({
 		ok: true,
-		msg: 'getEvents'
+		total,
+		events
 	});
 }
 
@@ -17,7 +20,7 @@ const getEvent = ( req = request, res = response ) => {
 }
 
 const createEvent = async( req = request, res = response ) => {
-	const event = new Event( req.body )
+	const event = new Event( req.body );
 	try {
 		event.user = req.uid;
 		const saveEvent = await event.save();

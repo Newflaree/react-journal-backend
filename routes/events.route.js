@@ -19,7 +19,7 @@ const {
  */
 const router = Router();
 
-router.get( '/', getEvents );
+router.get( '/', validateFields, getEvents );
 router.get( '/:id', getEvent );
 
 router.post( '/', [
