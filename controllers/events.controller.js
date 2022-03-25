@@ -3,10 +3,11 @@ const { request, response } = require( 'express' );
 const Event = require( '../models/event.model' );
 
 const getEvents = async( req = request, res = response ) => {
+	const query = { status: true };
 	try {
 		const [ total, events ] = await Promise.all([
-			Event.countDocuments(),
-			Event.find().populate( 'user', 'name' )
+			Event.countDocuments( query ),
+			Event.find( query ).populate( 'user', 'name' )
 		]);
 
 		res.json({
@@ -29,6 +30,12 @@ const getEvent = async( req = request, res = response ) => {
 
 	try {
 		const event = await Event.findById( id );
+		if ( !event.status ) {
+			return res.status( 400 ).json({
+				ok: false,
+				msg: 'There are no event with that id'
+			});
+		}
 
 		res.json({
 			ok: true,
@@ -85,11 +92,16 @@ const updateEvent = async( req = request, res = response ) => {
 	}
 }
 
-const deleteEvent = ( req = request, res = response ) => {
+const deleteEvent = async( req = request, res = response ) => {
+	const { id } = req.params;
+	const query = { status: false };
+
 	try {
+		const event = await Event.findByIdAndUpdate( id, query, { new: true } );
+
 		res.json({
 			ok: true,
-			msg: 'deleteEvent'
+			event
 		});
 
 	} catch( err ) {

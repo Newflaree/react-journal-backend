@@ -19,8 +19,17 @@ const {
  */
 const router = Router();
 
-router.get( '/', validateFields, getEvents );
-router.get( '/:id', getEvent );
+router.get( '/', [
+	validateJWT,
+	validateFields
+], getEvents );
+
+router.get( '/:id', [
+	validateJWT,
+	check( 'id', 'Is not a Mongo id' ).isMongoId(),
+	check( 'id' ).custom( eventIdValidation ),
+	validateFields
+], getEvent );
 
 router.post( '/', [
 	validateJWT,
@@ -35,14 +44,14 @@ router.put( '/:id', [
 	check( 'title', 'The title is mandatory' ).not().isEmpty(),
 	check( 'start', 'Start date is mandatory' ).custom( isDate ),
 	check( 'end', 'End date is mandatory' ).custom( isDate ),
-	check( 'id', 'Invalid password' ).isMongoId(),
+	check( 'id', 'Is not a Mongo id' ).isMongoId(),
 	check( 'id' ).custom( eventIdValidation ),
 	validateFields
 ], updateEvent );
 
 router.delete( '/:id', [
 	validateJWT,
-	check( 'id', 'Invalid password' ).isMongoId(),
+	check( 'id', 'Is not a Mongo id' ).isMongoId(),
 	check( 'id' ).custom( eventIdValidation ),
 	validateFields
 ], deleteEvent );
