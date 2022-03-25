@@ -9,7 +9,6 @@ class Server {
 		this.paths = {
 			auth: '/api/auth',
 			events: '/api/events',
-			users: '/api/users'
 		}
 
 		this.connectDB();
@@ -30,7 +29,6 @@ class Server {
 	routes() {
 		this.app.use( this.paths.auth, require( '../routes/auth.route' ) );
 		this.app.use( this.paths.events, require( '../routes/events.route' ) );
-		this.app.use( this.paths.users, require( '../routes/users.route' ) );
 	}
 
 	listen() {
