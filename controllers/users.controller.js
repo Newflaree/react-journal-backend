@@ -1,12 +1,18 @@
 const { request, response } = require( 'express' );
 
-const getUsers = ( req = request, res = response ) => {
+const createUser = async( req = request, res = response ) => {
+	const { name, email, password } = req.body;
+
 	res.json({
 		ok: true,
-		msg: 'getUsers'
+		user: {
+			name,
+			email,
+			password
+		}
 	});
 }
 
 module.exports = {
-	getUsers
+	createUser,
 }
