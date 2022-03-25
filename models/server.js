@@ -1,6 +1,6 @@
 const express = require( "express" );
 const cors = require( 'cors' );
- 
+const dbConnection = require("../database/config.db");
 
 class Server {
 	constructor() {
@@ -10,8 +10,14 @@ class Server {
 			users: '/api/users'
 		}
 
+		this.connectDB();
+
 		this.middlewares();
 		this.routes();
+	}
+
+	async connectDB() {
+		await dbConnection();
 	}
 
 	middlewares() {
@@ -26,10 +32,9 @@ class Server {
 	listen() {
 		this.app.listen( this.port, () => {
 			console.clear();
-			console.log( `Listening on port ${ this.port }` );
+			console.log( `Listening on port ${ this.port.green }` );
 		});
 	}
 }
 
 module.exports = Server;
-
