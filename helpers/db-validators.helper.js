@@ -9,6 +9,16 @@ const emailValidation = async( email = '' ) => {
 	return true;
 }
 
+const eventIdValidation = async( id = '' ) => {
+	const eventExists = await User.findOne({ id });
+	if ( !eventExists ) {
+		throw new Error( 'There are no event with that id' );
+	}
+
+	return true;
+}
+
 module.exports = {
-	emailValidation
+	emailValidation,
+	eventIdValidation
 }

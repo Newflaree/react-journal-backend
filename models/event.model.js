@@ -16,6 +16,10 @@ const EventSchema = Schema({
 		type: Date,
 		required: true
 	},
+	status: {
+		type: Boolean,
+		default: true
+	},
 	user: {
 		type: Schema.Types.ObjectId,
 		ref: 'User',

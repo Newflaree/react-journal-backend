@@ -3,7 +3,7 @@ const { check } = require( 'express-validator' );
 // Middlewares
 const { validateFields, validateJWT } = require('../middlewares');
 // Helpers
-const { isDate } = require('../helpers');
+const { isDate, eventIdValidation } = require('../helpers');
 // Controllers
 const {
 	getEvents,
@@ -30,7 +30,21 @@ router.post( '/', [
 	validateFields
 ], createEvent );
 
-router.put( '/:id', updateEvent );
-router.delete( '/:id', deleteEvent );
+router.put( '/:id', [
+	validateJWT,
+	check( 'title', 'The title is mandatory' ).not().isEmpty(),
+	check( 'start', 'Start date is mandatory' ).custom( isDate ),
+	check( 'end', 'End date is mandatory' ).custom( isDate ),
+	check( 'id', 'Invalid password' ).isMongoId(),
+	check( 'id' ).custom( eventIdValidation ),
+	validateFields
+], updateEvent );
+
+router.delete( '/:id', [
+	validateJWT,
+	check( 'id', 'Invalid password' ).isMongoId(),
+	check( 'id' ).custom( eventIdValidation ),
+	validateFields
+], deleteEvent );
 
 module.exports = router;

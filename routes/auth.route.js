@@ -7,6 +7,10 @@ const { emailValidation } = require('../helpers');
 // Controllers
 const { login, register } = require('../controllers/auth.controller');
 
+
+/*
+ *	PATH: /api/auth
+ */
 const router = Router();
 
 router.post( '/', [
